@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import './styles/tokaido_53_stations.css';
+import { ThemeProvider, CssBaseline } from '@mui/material';
+import { Container, Box, Grid } from '@mui/material';
 
-// コンポーネントのインポート
+// テーマとコンポーネントのインポート
+import theme from './theme/theme';
 import LoginScreen from './components/LoginScreen';
 import Header from './components/Header';
 import ProgressBar from './components/ProgressBar';
@@ -63,41 +65,69 @@ const App = () => {
 
   const visitedCount = Object.values(visitData).filter(data => data.visited).length;
 
-  if (!user) {
-    return <LoginScreen onLogin={handleLogin} />;
-  }
-
   return (
-    <div>
-      <Header user={user} onLogout={handleLogout} />
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       
-      <main className="main-content">
-        <ProgressBar visited={visitedCount} total={stationsData.length} />
-        
-        <FilterTabs filter={filter} onFilterChange={setFilter} />
-        
-        <div className="stations-grid">
-          {filteredStations.map(station => (
-            <StationCard
-              key={station.id}
-              station={station}
-              visitData={visitData[station.id]}
-              onToggleVisit={handleToggleVisit}
-              onEditDetails={setSelectedStation}
-            />
-          ))}
-        </div>
-      </main>
+      {!user ? (
+        <LoginScreen onLogin={handleLogin} />
+      ) : (
+        <Box
+          sx={{
+            minHeight: '100vh',
+            background: 'linear-gradient(135deg, #FBF9F7 0%, #F5F5F5 100%)',
+            backgroundAttachment: 'fixed'
+          }}
+        >
+          <Header user={user} onLogout={handleLogout} />
+          
+          <Container maxWidth="lg" sx={{ py: 4 }}>
+            <ProgressBar visited={visitedCount} total={stationsData.length} />
+            
+            <FilterTabs filter={filter} onFilterChange={setFilter} />
+            
+            <Grid container spacing={3}>
+              {filteredStations.map(station => (
+                <Grid item xs={12} sm={6} lg={4} key={station.id}>
+                  <StationCard
+                    station={station}
+                    visitData={visitData[station.id]}
+                    onToggleVisit={handleToggleVisit}
+                    onEditDetails={setSelectedStation}
+                  />
+                </Grid>
+              ))}
+            </Grid>
 
-      {selectedStation && (
-        <StationDetailModal
-          station={selectedStation}
-          visitData={visitData[selectedStation.id]}
-          onSave={handleSaveDetails}
-          onClose={() => setSelectedStation(null)}
-        />
+            {filteredStations.length === 0 && (
+              <Box
+                sx={{
+                  textAlign: 'center',
+                  py: 8,
+                  color: 'text.secondary'
+                }}
+              >
+                <Typography variant="h6">
+                  該当する宿場がありません
+                </Typography>
+                <Typography variant="body2" sx={{ mt: 1 }}>
+                  フィルターを変更してください
+                </Typography>
+              </Box>
+            )}
+          </Container>
+
+          {selectedStation && (
+            <StationDetailModal
+              station={selectedStation}
+              visitData={visitData[selectedStation.id]}
+              onSave={handleSaveDetails}
+              onClose={() => setSelectedStation(null)}
+            />
+          )}
+        </Box>
       )}
-    </div>
+    </ThemeProvider>
   );
 };
 
