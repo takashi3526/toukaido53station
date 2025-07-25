@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './styles/tokaido_53_stations.css';
 
 // 宿場データ
@@ -262,6 +262,7 @@ const StationDetailModal = ({ station, visitData, onSave, onClose }) => {
   const [visitDate, setVisitDate] = useState(visitData?.visitDate || '');
   const [notes, setNotes] = useState(visitData?.notes || '');
   const [photos, setPhotos] = useState(visitData?.photos || []);
+  const fileInputRef = useRef(null);
 
   const handleSave = () => {
     onSave(station.id, {
@@ -273,13 +274,68 @@ const StationDetailModal = ({ station, visitData, onSave, onClose }) => {
     onClose();
   };
 
-  const handlePhotoAdd = () => {
-    const newPhoto = `photo_${Date.now()}.jpg`;
-    setPhotos([...photos, newPhoto]);
+  const handleFileSelect = (event) => {
+    const files = Array.from(event.target.files);
+    
+    files.forEach(file => {
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const newPhoto = {
+            id: Date.now() + Math.random(),
+            name: file.name,
+            url: e.target.result,
+            size: file.size
+          };
+          setPhotos(prev => [...prev, newPhoto]);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+    
+    // ファイル入力をリセット
+    event.target.value = '';
   };
 
-  const removePhoto = (index) => {
-    setPhotos(photos.filter((_, i) => i !== index));
+  const handlePhotoAdd = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleDrop = (event) => {
+    event.preventDefault();
+    const files = Array.from(event.dataTransfer.files);
+    
+    files.forEach(file => {
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const newPhoto = {
+            id: Date.now() + Math.random(),
+            name: file.name,
+            url: e.target.result,
+            size: file.size
+          };
+          setPhotos(prev => [...prev, newPhoto]);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  };
+
+  const handleDragOver = (event) => {
+    event.preventDefault();
+  };
+
+  const removePhoto = (photoId) => {
+    setPhotos(photos.filter(photo => photo.id !== photoId));
+  };
+
+  const formatFileSize = (bytes) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
   return (
@@ -347,24 +403,47 @@ const StationDetailModal = ({ station, visitData, onSave, onClose }) => {
 
           <div className="modal-section">
             <label className="form-label">写真</label>
-            <div className="photo-upload-area">
+            <div 
+              className="photo-upload-area"
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+            >
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleFileSelect}
+                style={{ display: 'none' }}
+              />
+              
               {photos.length === 0 ? (
-                <div>
+                <div onClick={handlePhotoAdd} style={{ cursor: 'pointer' }}>
                   <div className="photo-upload-icon">📷</div>
                   <p className="photo-upload-text">写真を追加してください</p>
                   <p className="photo-upload-hint">クリックまたはドラッグ＆ドロップ</p>
                 </div>
               ) : (
                 <div className="photo-grid">
-                  {photos.map((photo, index) => (
-                    <div key={index} className="photo-item">
-                      <div className="photo-placeholder">{photo}</div>
-                      <button
-                        onClick={() => removePhoto(index)}
-                        className="photo-remove"
-                      >
-                        ×
-                      </button>
+                  {photos.map((photo) => (
+                    <div key={photo.id} className="photo-item">
+                      <div className="photo-container">
+                        <img 
+                          src={photo.url} 
+                          alt={photo.name}
+                          className="photo-preview"
+                        />
+                        <div className="photo-info">
+                          <div className="photo-name">{photo.name}</div>
+                          <div className="photo-size">{formatFileSize(photo.size)}</div>
+                        </div>
+                        <button
+                          onClick={() => removePhoto(photo.id)}
+                          className="photo-remove"
+                        >
+                          ×
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -373,7 +452,7 @@ const StationDetailModal = ({ station, visitData, onSave, onClose }) => {
                 onClick={handlePhotoAdd}
                 className="photo-add-button"
               >
-                写真を選択
+                📷 写真を選択
               </button>
             </div>
           </div>
