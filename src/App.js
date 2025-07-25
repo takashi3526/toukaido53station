@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './styles/tokaido_53_stations.css';
 
 // 宿場データ
 const stationsData = [
@@ -12,7 +13,6 @@ const stationsData = [
   { id: 8, name: '平塚', reading: 'ひらつか', location: '神奈川県平塚市', number: 8 },
   { id: 9, name: '大磯', reading: 'おおいそ', location: '神奈川県大磯町', number: 9 },
   { id: 10, name: '小田原', reading: 'おだわら', location: '神奈川県小田原市', number: 10 },
-  // 続きの宿場も追加可能
   { id: 11, name: '箱根', reading: 'はこね', location: '神奈川県箱根町', number: 11 },
   { id: 12, name: '三島', reading: 'みしま', location: '静岡県三島市', number: 12 },
 ];
@@ -30,40 +30,40 @@ const LoginScreen = ({ onLogin }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">東海道53次</h1>
-          <p className="text-gray-600">宿場町巡りの記録</p>
+    <div className="login-screen">
+      <div className="login-container">
+        <div className="login-title">
+          <h1>東海道53次</h1>
+          <p>宿場町巡りの記録</p>
         </div>
         
-        <div className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+        <div>
+          <div className="form-group">
+            <label className="form-label">
               ユーザー名
             </label>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">👤</span>
+            <div className="input-with-icon">
+              <span className="input-icon">👤</span>
               <input
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                className="form-input form-input-with-icon"
                 placeholder="ユーザー名を入力"
                 onKeyPress={(e) => e.key === 'Enter' && handleLogin(e)}
               />
             </div>
           </div>
           
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+          <div className="form-group">
+            <label className="form-label">
               パスワード
             </label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              className="form-input"
               placeholder="パスワードを入力"
               onKeyPress={(e) => e.key === 'Enter' && handleLogin(e)}
             />
@@ -71,7 +71,7 @@ const LoginScreen = ({ onLogin }) => {
           
           <button
             onClick={handleLogin}
-            className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-4 rounded-lg transition duration-200"
+            className="login-button"
           >
             ログイン
           </button>
@@ -84,17 +84,17 @@ const LoginScreen = ({ onLogin }) => {
 // ヘッダーコンポーネント
 const Header = ({ user, onLogout }) => {
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200 p-4">
-      <div className="max-w-4xl mx-auto flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800">東海道53次</h1>
-          <p className="text-gray-600 text-sm">江戸時代の東海道を辿る旅の記録</p>
+    <header className="header">
+      <div className="header-content">
+        <div className="header-title">
+          <h1>東海道53次</h1>
+          <p>江戸時代の東海道を辿る旅の記録</p>
         </div>
-        <div className="flex items-center space-x-4">
-          <span className="text-gray-700">こんにちは、{user}さん</span>
+        <div className="header-user">
+          <span className="user-name">こんにちは、{user}さん</span>
           <button
             onClick={onLogout}
-            className="flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition"
+            className="logout-button"
           >
             <span>🚪</span>
             <span>ログアウト</span>
@@ -110,24 +110,24 @@ const ProgressBar = ({ visited, total }) => {
   const percentage = Math.round((visited / total) * 100);
   
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
-      <div className="flex justify-between items-center mb-4">
-        <div className="text-center">
-          <div className="text-2xl font-bold text-green-600">{visited}</div>
-          <div className="text-sm text-gray-600">訪問済み</div>
+    <div className="progress-container">
+      <div className="progress-stats">
+        <div className="progress-stat">
+          <div className="progress-stat-number progress-stat-visited">{visited}</div>
+          <div className="progress-stat-label">訪問済み</div>
         </div>
-        <div className="text-center">
-          <div className="text-2xl font-bold text-gray-400">{total - visited}</div>
-          <div className="text-sm text-gray-600">未訪問</div>
+        <div className="progress-stat">
+          <div className="progress-stat-number progress-stat-unvisited">{total - visited}</div>
+          <div className="progress-stat-label">未訪問</div>
         </div>
-        <div className="text-center">
-          <div className="text-2xl font-bold text-blue-600">{percentage}%</div>
-          <div className="text-sm text-gray-600">達成率</div>
+        <div className="progress-stat">
+          <div className="progress-stat-number progress-stat-percentage">{percentage}%</div>
+          <div className="progress-stat-label">達成率</div>
         </div>
       </div>
-      <div className="w-full bg-gray-200 rounded-full h-3">
+      <div className="progress-bar">
         <div
-          className="bg-gradient-to-r from-green-400 to-blue-500 h-3 rounded-full transition-all duration-300"
+          className="progress-bar-fill"
           style={{ width: `${percentage}%` }}
         ></div>
       </div>
@@ -140,16 +140,14 @@ const FilterTabs = ({ filter, onFilterChange }) => {
   const tabs = ['すべて', '訪問済み', '未訪問'];
   
   return (
-    <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
-      <div className="flex space-x-2">
+    <div className="filter-container">
+      <div className="filter-tabs">
         {tabs.map((tab) => (
           <button
             key={tab}
             onClick={() => onFilterChange(tab)}
-            className={`px-4 py-2 rounded-lg font-medium transition ${
-              filter === tab
-                ? 'bg-orange-500 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            className={`filter-tab ${
+              filter === tab ? 'filter-tab-active' : 'filter-tab-inactive'
             }`}
           >
             {tab}
@@ -165,50 +163,46 @@ const StationCard = ({ station, visitData, onToggleVisit, onEditDetails }) => {
   const isVisited = visitData && visitData.visited;
   
   return (
-    <div className={`bg-white rounded-lg shadow-sm border-2 transition-all ${
-      isVisited ? 'border-green-200 bg-green-50' : 'border-gray-200'
-    }`}>
-      <div className="p-4">
-        <div className="flex justify-between items-start mb-3">
-          <div className="flex-1">
-            <h3 className="text-lg font-semibold text-gray-800">{station.name}</h3>
-            <p className="text-sm text-gray-600">読み方: {station.reading}</p>
-            <p className="text-sm text-gray-600 flex items-center">
-              <span className="mr-1">📍</span>
+    <div className={`station-card ${isVisited ? 'station-card-visited' : ''}`}>
+      <div className="station-card-content">
+        <div className="station-header">
+          <div className="station-info">
+            <h3 className="station-name">{station.name}</h3>
+            <p className="station-details">読み方: {station.reading}</p>
+            <p className="station-details station-location">
+              <span>📍</span>
               {station.location}
             </p>
-            <p className="text-sm text-gray-600">宿場番号: {station.number}</p>
+            <p className="station-details">宿場番号: {station.number}</p>
           </div>
-          <div className="flex flex-col items-center space-y-2">
+          <div className="station-checkbox-container">
             <button
               onClick={() => onToggleVisit(station.id)}
-              className={`w-6 h-6 rounded border-2 flex items-center justify-center transition ${
-                isVisited
-                  ? 'bg-green-500 border-green-500 text-white'
-                  : 'border-gray-300 hover:border-green-400'
+              className={`station-checkbox ${
+                isVisited ? 'station-checkbox-checked' : ''
               }`}
             >
               {isVisited && '✓'}
             </button>
-            <span className="text-xs text-gray-500">
+            <span className="station-status">
               {isVisited ? '訪問済み' : '未訪問'}
             </span>
           </div>
         </div>
         
         {isVisited && visitData?.visitDate && (
-          <div className="mb-3 p-3 bg-blue-50 rounded-lg">
-            <div className="flex items-center space-x-2 text-sm text-blue-700">
+          <div className="visit-date-info">
+            <div className="visit-date-text">
               <span>📅</span>
               <span>訪問日: {visitData.visitDate}</span>
             </div>
           </div>
         )}
         
-        <div className="flex justify-end space-x-2">
+        <div className="station-actions">
           <button
             onClick={() => onEditDetails(station)}
-            className="flex items-center space-x-1 px-3 py-1 text-sm text-gray-600 hover:text-orange-600 transition"
+            className="edit-button"
           >
             <span>✏️</span>
             <span>詳細編集</span>
@@ -237,7 +231,6 @@ const StationDetailModal = ({ station, visitData, onSave, onClose }) => {
   };
 
   const handlePhotoAdd = () => {
-    // 実際の実装では、ファイル選択ダイアログを開く
     const newPhoto = `photo_${Date.now()}.jpg`;
     setPhotos([...photos, newPhoto]);
   };
@@ -247,99 +240,85 @@ const StationDetailModal = ({ station, visitData, onSave, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="flex justify-between items-center p-6 border-b">
-          <h2 className="text-xl font-semibold">{station.name} - 詳細情報</h2>
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <div className="modal-header">
+          <h2 className="modal-title">{station.name} - 詳細情報</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition"
+            className="modal-close"
           >
-            <span className="text-xl">×</span>
+            <span>×</span>
           </button>
         </div>
         
-        <div className="p-6 space-y-6">
-          {/* 基本情報 */}
-          <div>
-            <h3 className="text-lg font-medium mb-4">基本情報</h3>
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <span className="font-medium">読み方:</span> {station.reading}
+        <div className="modal-body">
+          <div className="modal-section">
+            <h3 className="section-title">基本情報</h3>
+            <div className="basic-info-grid">
+              <div className="info-item">
+                <span className="info-label">読み方:</span> {station.reading}
               </div>
-              <div>
-                <span className="font-medium">所在地:</span> {station.location}
+              <div className="info-item">
+                <span className="info-label">所在地:</span> {station.location}
               </div>
-              <div>
-                <span className="font-medium">宿場番号:</span> {station.number}
+              <div className="info-item">
+                <span className="info-label">宿場番号:</span> {station.number}
               </div>
             </div>
           </div>
 
-          {/* 訪問状況 */}
-          <div>
-            <label className="flex items-center space-x-3">
+          <div className="modal-section">
+            <label className="checkbox-label">
               <input
                 type="checkbox"
                 checked={visited}
                 onChange={(e) => setVisited(e.target.checked)}
-                className="w-5 h-5 text-green-500 rounded focus:ring-green-500"
+                className="checkbox-input"
               />
-              <span className="font-medium">訪問済み</span>
+              <span className="checkbox-text">訪問済み</span>
             </label>
           </div>
 
-          {/* 訪問日 */}
           {visited && (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                訪問日
-              </label>
+            <div className="modal-section">
+              <label className="form-label">訪問日</label>
               <input
                 type="date"
                 value={visitDate}
                 onChange={(e) => setVisitDate(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                className="date-input"
               />
             </div>
           )}
 
-          {/* メモ */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              メモ・感想
-            </label>
+          <div className="modal-section">
+            <label className="form-label">メモ・感想</label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              rows={4}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              className="textarea-input"
               placeholder="訪問時の感想や特記事項を入力してください"
             />
           </div>
 
-          {/* 写真 */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              写真
-            </label>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+          <div className="modal-section">
+            <label className="form-label">写真</label>
+            <div className="photo-upload-area">
               {photos.length === 0 ? (
                 <div>
-                  <span className="block text-4xl text-gray-400 mb-4">📷</span>
-                  <p className="text-gray-500 mb-2">写真を追加してください</p>
-                  <p className="text-sm text-gray-400">クリックまたはドラッグ＆ドロップ</p>
+                  <div className="photo-upload-icon">📷</div>
+                  <p className="photo-upload-text">写真を追加してください</p>
+                  <p className="photo-upload-hint">クリックまたはドラッグ＆ドロップ</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-3 gap-2">
+                <div className="photo-grid">
                   {photos.map((photo, index) => (
-                    <div key={index} className="relative">
-                      <div className="w-full h-20 bg-gray-200 rounded flex items-center justify-center text-xs text-gray-500">
-                        {photo}
-                      </div>
+                    <div key={index} className="photo-item">
+                      <div className="photo-placeholder">{photo}</div>
                       <button
                         onClick={() => removePhoto(index)}
-                        className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600"
+                        className="photo-remove"
                       >
                         ×
                       </button>
@@ -349,7 +328,7 @@ const StationDetailModal = ({ station, visitData, onSave, onClose }) => {
               )}
               <button
                 onClick={handlePhotoAdd}
-                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                className="photo-add-button"
               >
                 写真を選択
               </button>
@@ -357,16 +336,16 @@ const StationDetailModal = ({ station, visitData, onSave, onClose }) => {
           </div>
         </div>
         
-        <div className="flex justify-end space-x-3 p-6 border-t bg-gray-50">
+        <div className="modal-footer">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-gray-600 hover:text-gray-800 transition"
+            className="cancel-button"
           >
             キャンセル
           </button>
           <button
             onClick={handleSave}
-            className="flex items-center space-x-2 px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600 transition"
+            className="save-button"
           >
             <span>💾</span>
             <span>保存</span>
@@ -384,9 +363,7 @@ const App = () => {
   const [visitData, setVisitData] = useState({});
   const [selectedStation, setSelectedStation] = useState(null);
 
-  // ログイン状態をローカルストレージから復元（実際の実装では使用しない）
   useEffect(() => {
-    // メモリ内でのデータ管理
     const savedVisitData = {};
     setVisitData(savedVisitData);
   }, []);
@@ -435,15 +412,15 @@ const App = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       <Header user={user} onLogout={handleLogout} />
       
-      <main className="max-w-4xl mx-auto p-6">
+      <main className="main-content">
         <ProgressBar visited={visitedCount} total={stationsData.length} />
         
         <FilterTabs filter={filter} onFilterChange={setFilter} />
         
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="stations-grid">
           {filteredStations.map(station => (
             <StationCard
               key={station.id}
