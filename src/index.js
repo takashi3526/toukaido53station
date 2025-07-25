@@ -1,7 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './styles/tokaido_53_stations.css'; // CSSファイルの読み込み
-import App from './App.js';
+import App from './App';
+import '@fontsource/noto-sans-jp/300.css';
+import '@fontsource/noto-sans-jp/400.css';
+import '@fontsource/noto-sans-jp/500.css';
+import '@fontsource/noto-sans-jp/700.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -9,4 +12,3 @@ root.render(
     <App />
   </React.StrictMode>
 );
-
