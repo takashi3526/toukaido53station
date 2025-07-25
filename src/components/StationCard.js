@@ -179,3 +179,25 @@ const StationCard = ({ station, visitData, onToggleVisit, onEditDetails }) => {
             borderColor: 'primary.main',
             borderRadius: 2,
             py: 1,
+            fontWeight: 500,
+            textTransform: 'none',
+            opacity: 0.7,
+            transform: 'translateY(4px)',
+            '&:hover': {
+              backgroundColor: 'primary.main',
+              color: 'white',
+              borderColor: 'primary.main',
+              opacity: 1,
+              transform: 'translateY(0)'
+            },
+            transition: 'all 0.3s ease'
+          }}
+        >
+          詳細編集
+        </Button>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default StationCard;
