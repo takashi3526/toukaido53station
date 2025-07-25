@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, MapPin, User, LogOut, Plus, Edit, Save, X, Camera } from 'lucide-react';
 
 // 宿場データ
 const stationsData = [
@@ -24,7 +23,7 @@ const LoginScreen = ({ onLogin }) => {
   const [password, setPassword] = useState('');
 
   const handleLogin = (e) => {
-    e.preventDefault();
+    if (e && e.preventDefault) e.preventDefault();
     if (username.trim()) {
       onLogin(username);
     }
@@ -38,20 +37,20 @@ const LoginScreen = ({ onLogin }) => {
           <p className="text-gray-600">宿場町巡りの記録</p>
         </div>
         
-        <form onSubmit={handleLogin} className="space-y-6">
+        <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               ユーザー名
             </label>
             <div className="relative">
-              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">👤</span>
               <input
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 placeholder="ユーザー名を入力"
-                required
+                onKeyPress={(e) => e.key === 'Enter' && handleLogin(e)}
               />
             </div>
           </div>
@@ -66,16 +65,17 @@ const LoginScreen = ({ onLogin }) => {
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               placeholder="パスワードを入力"
+              onKeyPress={(e) => e.key === 'Enter' && handleLogin(e)}
             />
           </div>
           
           <button
-            type="submit"
+            onClick={handleLogin}
             className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-4 rounded-lg transition duration-200"
           >
             ログイン
           </button>
-        </form>
+        </div>
       </div>
     </div>
   );
@@ -96,7 +96,7 @@ const Header = ({ user, onLogout }) => {
             onClick={onLogout}
             className="flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition"
           >
-            <LogOut className="w-4 h-4" />
+            <span>🚪</span>
             <span>ログアウト</span>
           </button>
         </div>
@@ -174,7 +174,7 @@ const StationCard = ({ station, visitData, onToggleVisit, onEditDetails }) => {
             <h3 className="text-lg font-semibold text-gray-800">{station.name}</h3>
             <p className="text-sm text-gray-600">読み方: {station.reading}</p>
             <p className="text-sm text-gray-600 flex items-center">
-              <MapPin className="w-4 h-4 mr-1" />
+              <span className="mr-1">📍</span>
               {station.location}
             </p>
             <p className="text-sm text-gray-600">宿場番号: {station.number}</p>
@@ -199,7 +199,7 @@ const StationCard = ({ station, visitData, onToggleVisit, onEditDetails }) => {
         {isVisited && visitData?.visitDate && (
           <div className="mb-3 p-3 bg-blue-50 rounded-lg">
             <div className="flex items-center space-x-2 text-sm text-blue-700">
-              <Calendar className="w-4 h-4" />
+              <span>📅</span>
               <span>訪問日: {visitData.visitDate}</span>
             </div>
           </div>
@@ -210,7 +210,7 @@ const StationCard = ({ station, visitData, onToggleVisit, onEditDetails }) => {
             onClick={() => onEditDetails(station)}
             className="flex items-center space-x-1 px-3 py-1 text-sm text-gray-600 hover:text-orange-600 transition"
           >
-            <Edit className="w-4 h-4" />
+            <span>✏️</span>
             <span>詳細編集</span>
           </button>
         </div>
@@ -255,7 +255,7 @@ const StationDetailModal = ({ station, visitData, onSave, onClose }) => {
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 transition"
           >
-            <X className="w-6 h-6" />
+            <span className="text-xl">×</span>
           </button>
         </div>
         
@@ -326,7 +326,7 @@ const StationDetailModal = ({ station, visitData, onSave, onClose }) => {
             <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
               {photos.length === 0 ? (
                 <div>
-                  <Camera className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <span className="block text-4xl text-gray-400 mb-4">📷</span>
                   <p className="text-gray-500 mb-2">写真を追加してください</p>
                   <p className="text-sm text-gray-400">クリックまたはドラッグ＆ドロップ</p>
                 </div>
@@ -368,7 +368,7 @@ const StationDetailModal = ({ station, visitData, onSave, onClose }) => {
             onClick={handleSave}
             className="flex items-center space-x-2 px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600 transition"
           >
-            <Save className="w-4 h-4" />
+            <span>💾</span>
             <span>保存</span>
           </button>
         </div>
