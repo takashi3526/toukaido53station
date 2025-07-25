@@ -401,7 +401,6 @@ const App = () => {
   };
 
   const handleToggleVisit = (stationId) => {
-    const station = stationsData.find(s => s.id === stationId);
     const currentData = visitData[stationId] || {};
     const newVisited = !currentData.visited;
     
